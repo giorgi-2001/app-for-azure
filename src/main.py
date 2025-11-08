@@ -1,7 +1,32 @@
+import json
+
 from flask import Flask, render_template
+
+from opencensus.ext.azure.trace_exporter import AzureExporter
+from opencensus.ext.flask.flask_middleware import FlaskMiddleware
+from opencensus.trace.samplers import ProbabilitySampler
+
+
+from .logger import CONNECTION_STRING, logger
 
 
 app = Flask(__name__)
+
+
+middleware = FlaskMiddleware(
+    app,
+    exporter=AzureExporter(connection_string=CONNECTION_STRING),
+    sampler=ProbabilitySampler(rate=1.0),
+)
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    logger.exception(json.dumps({
+        "event": "error",
+        "error": str(e)
+    }))
+    return {"error": "Internal Server Error"}, 500
 
 
 @app.get("/")
