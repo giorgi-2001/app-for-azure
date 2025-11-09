@@ -3,3 +3,4 @@
 ### Implemented:
 1) Deployment on Azure App Service (Python runtime)
 2) Logging in Application Insights
+3) CRD operation in Blob Storage
