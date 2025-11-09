@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    MS Azure Course App - Images
+{% endblock %}
+
+
+{% block content %}
+    <form enctype="multipart/form-data" method="POST" action="{{ url_for('images.add_image') }}">
+        <div class="input-group">
+            <input required name="image" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+            <button class="btn btn-outline-secondary" id="inputGroupFileAddon04">
+                Upload
+            </button>
+        </div>
+    </form>
+    <h2 class="my-3">Images:</h2>
+    {% if images %}
+        <ul class="list-group w-fit">
+            {% for img in images %}
+                <li class="list-group-item">
+                    <a href="{{ url_for('images.get_image_by_name', image_name=img)}}">
+                        {{ img }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -13,8 +13,6 @@ CONNECTION_STRING = os.getenv(
     "APP_INSIGHT_CONN_STR"
 )
 
-print(CONNECTION_STRING)
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 

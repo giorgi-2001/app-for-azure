@@ -1,0 +1,18 @@
+# Deploy on Azure App Service
+
+az webapp up \
+  --sku B1 \
+  --location polandcentral \
+  --name lear-azure-app-2001 \
+  --resource-group learn-azure-services \
+  --runtime "PYTHON:3.14"
+
+az webapp config appsettings set \
+  --resource-group learn-azure-services \
+  --name lear-azure-app-2001 \
+  --settings APP_INSIGHT_CONN_STR=
+
+
+# Run command
+
+gunicorn --bind=0.0.0.0:$PORT src.main:app
