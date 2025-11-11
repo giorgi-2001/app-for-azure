@@ -14,16 +14,18 @@ SECRET_NAME = "database-uri"
 ENV = os.environ.get("ENV", "PROD")
 
 
-def get_db_engine():
-    if ENV == "DEV":
-        return create_engine("sqlite:///./db.sqlite3")
-    elif ENV == "PROD":
-        secret = client.get_secret(SECRET_NAME).value
-        if secret:
-            return create_engine(secret)
+def get_db_url():
+    secret = client.get_secret(SECRET_NAME).value
+    if ENV == "DEV" or secret is None:
+        return "sqlite:///./db.sqlite3"
+    else:
+        return secret
 
 
-engine = get_db_engine()
+DATABASE_URL = get_db_url()
+
+
+engine = create_engine(DATABASE_URL)
 
 
 SessionLocal = sessionmaker(autoflush=False, bind=engine)

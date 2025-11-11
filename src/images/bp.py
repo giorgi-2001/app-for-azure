@@ -25,10 +25,11 @@ def add_image():
     img_data = {
         "name": f.filename or uuid.uuid4().hex + ".png",
         "type": f.content_type,
-        "size": f.content_length
     }
+    blob_storage.upload_file(f.stream, img_data["name"])
+    metadata = blob_storage.get_file_metadata(img_data["name"])
+    img_data["size"] = metadata["size"]
     image = image_dao.create_image(img_data)
-    blob_storage.upload_file(f.stream, image.name)
     return redirect(url_for("images.get_image_by_name", image_id=image.image_id))
 
 

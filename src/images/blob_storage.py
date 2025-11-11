@@ -15,7 +15,13 @@ blob_service_client = BlobServiceClient(account_url, credential=default_credenti
 
 def upload_file(content: IO[bytes], filename: str):
     blob_client = blob_service_client.get_blob_client(container=container_name, blob=filename)
-    blob_client.upload_blob(content, overwrite=True)
+    response = blob_client.upload_blob(content, overwrite=True)
+    print(response)
+
+
+def get_file_metadata(filename: str):
+    blob_client = blob_service_client.get_blob_client(container=container_name, blob=filename)
+    return blob_client.get_blob_properties()
 
 
 def delete_file(filename: str):

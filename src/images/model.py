@@ -8,7 +8,7 @@ from database import Base
 int_pk = Annotated[int, mapped_column(primary_key=True, index=True)]
 
 text = Annotated[str, mapped_column(nullable=False)]
-number = Annotated[float, mapped_column(nullable=False)]
+number = Annotated[int, mapped_column(nullable=False)]
 
 
 class Image(Base):
