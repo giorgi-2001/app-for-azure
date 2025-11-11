@@ -19,8 +19,8 @@
         <ul class="list-group w-fit">
             {% for img in images %}
                 <li class="list-group-item">
-                    <a href="{{ url_for('images.get_image_by_name', image_name=img)}}">
-                        {{ img }}
+                    <a href="{{ url_for('images.get_image_by_name', image_id=img.image_id)}}">
+                        {{ img.name }}
                     </a>
                 </li>
             {% endfor %}
