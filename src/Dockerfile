@@ -25,4 +25,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+ENTRYPOINT [ "./entrypoint.sh" ]
+
 CMD ["gunicorn", "--bind=0.0.0.0:80", "main:app"]
