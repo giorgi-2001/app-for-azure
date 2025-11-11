@@ -1,0 +1,37 @@
+name: Deploy container to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to Azure Container Registry
+        run: az acr login --name learnawscr.azurecr.io
+
+      - name: Build and push image
+        run: |
+          docker build -t learnawscr.azurecr.io/azure-app:${{ github.sha }} ./src
+          docker push learnawscr.azurecr.io/azure-app:${{ github.sha }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: lear-azure-app-2001
+          images: learnawscr.azurecr.io/azure-app:${{ github.sha }}

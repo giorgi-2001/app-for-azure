@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  app:
+    build: ./src
+    image: learnawscr.azurecr.io/azure-app:latest
+    environment:
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      AZURE_SUBSCRIPTION_ID: ${AZURE_SUBSCRIPTION_ID}
+    volumes:
+      - ./src:/app
+      - ~/.azure:/root/.azure:ro

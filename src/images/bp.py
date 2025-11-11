@@ -11,7 +11,6 @@ bp = Blueprint("images", __name__, url_prefix="/images")
 @bp.get("/")
 def list_all_images():
     images = blob_storage.list_files()
-    print(images)
     return render_template("image_list.html", images=images)
 
 

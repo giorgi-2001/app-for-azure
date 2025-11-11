@@ -1,23 +1,26 @@
 import logging
-import os
-
-from dotenv import load_dotenv
 
 from opencensus.ext.azure.log_exporter import AzureLogHandler
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 
 
-load_dotenv()
+VAULT_URL = "https://learn-azure-kw.vault.azure.net/"
+SECRET_NAME = "app-insights-inst-key"
 
 
-CONNECTION_STRING = os.getenv(
-    "APP_INSIGHT_CONN_STR"
-)
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url=VAULT_URL, credential=credential)
+inst_key = client.get_secret(SECRET_NAME).value
+
+connection_string = f"InstrumentationKey={inst_key}"
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-logger.addHandler(AzureLogHandler(connection_string=CONNECTION_STRING))
+logger.addHandler(AzureLogHandler(connection_string=connection_string))
 
 
 stream_handler = logging.StreamHandler()
