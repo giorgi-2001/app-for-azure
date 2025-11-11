@@ -43,7 +43,7 @@ class ImageDAO(metaclass=SingletonMeta):
                 session.add(new_img)
                 session.commit()
             session.refresh(new_img)
-            return new_img.name
+            return new_img
 
     def delete_image(self, image_id: int):
         with self.session_maker() as session:

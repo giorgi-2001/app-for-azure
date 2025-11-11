@@ -27,9 +27,9 @@ def add_image():
         "type": f.content_type,
         "size": f.content_length
     }
-    image_name = image_dao.create_image(img_data)
-    blob_storage.upload_file(f.stream, image_name)
-    return redirect(url_for("images.get_image_by_name", image_name=image_name))
+    image = image_dao.create_image(img_data)
+    blob_storage.upload_file(f.stream, image.name)
+    return redirect(url_for("images.get_image_by_name", image_id=image.image_id))
 
 
 @bp.get("/<int:image_id>")

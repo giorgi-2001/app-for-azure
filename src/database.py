@@ -1,34 +1,29 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import (
     sessionmaker, DeclarativeBase, Mapped, mapped_column, declared_attr
 )
-from sqlalchemy import func
-
-from azure.core.exceptions import HttpResponseError
 
 from typing import Annotated
 from datetime import datetime
+import os
 
-from logger import client, logger
-
-
-def get_db_url():
-    url = "sqlite:///./db.sqlite3"
-    try:
-        secret = client.get_secret(SECRET_NAME).value
-        if secret:
-            url = secret
-    except HttpResponseError as e:
-        logger.exception(e)
-    finally:
-        return url
+from logger import client
 
 
 SECRET_NAME = "database-uri"
-DATABASE_URL = get_db_url()
+ENV = os.environ.get("ENV", "PROD")
 
 
-engine = create_engine(DATABASE_URL)
+def get_db_engine():
+    if ENV == "DEV":
+        return create_engine("sqlite:///./db.sqlite3")
+    elif ENV == "PROD":
+        secret = client.get_secret(SECRET_NAME).value
+        if secret:
+            return create_engine(secret)
+
+
+engine = get_db_engine()
 
 
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
